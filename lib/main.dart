@@ -5,6 +5,7 @@ import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_bloc.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/features/attendance_list/screens/attendance_list_screen.dart';
 import 'package:schooldata_hub_client/features/login/bloc/auth_bloc.dart';
+import 'package:schooldata_hub_client/features/login/bloc/auth_event.dart';
 import 'package:schooldata_hub_client/features/login/screens/login_screen.dart';
 
 import 'features/login/bloc/auth_state.dart';
@@ -14,6 +15,9 @@ Future<void> main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (BuildContext context) => AuthBloc(),
+        ),
         BlocProvider(
           create: (BuildContext context) => PupilBaseBloc(),
         ),
@@ -28,6 +32,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = AuthBloc();
+    authBloc.add(const StartAppEvent());
     return MaterialApp(
       home: BlocProvider(
         create: (context) => AuthBloc(),

@@ -14,6 +14,11 @@ class AuthInitialState extends AuthState {
   const AuthInitialState() : super();
 }
 
+class AuthUnauthenticatedState extends AuthState {
+  const AuthUnauthenticatedState()
+      : super(isAuthenticated: false, isError: false);
+}
+
 class AuthLoadingState extends AuthState {
   const AuthLoadingState() : super();
 }
