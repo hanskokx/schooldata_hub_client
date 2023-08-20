@@ -12,6 +12,7 @@ import 'features/login/bloc/auth_state.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -32,8 +33,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = AuthBloc();
-    authBloc.add(const StartAppEvent());
     return MaterialApp(
       home: BlocProvider(
         create: (context) => AuthBloc(),
@@ -48,13 +47,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {},
       builder: (context, state) {
+        context.read<AuthBloc>().add(const StartAppEvent());
         Debug().info('State is $state');
+
         if (state is AuthenticatedState) {
           return const AttendanceListScreen();
-        } else {
+        } else if (state is AuthUnauthenticatedState ||
+            state is AuthErrorState) {
           return LoginScreen();
+        } else {
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

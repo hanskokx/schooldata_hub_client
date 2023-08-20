@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:schooldata_hub_client/common/utils/extensions.dart';
 
 class Debug {
-  success(String message) {
+  void success(String message) {
     debugPrint(message.logSuccess());
   }
 
-  warning(String message) {
+  void warning(String message) {
     debugPrint(message.logWarning());
   }
 
-  error(String message) {
+  void error(String message) {
     debugPrint(message.logError());
   }
 
-  info(String message) {
+  void info(String message) {
     debugPrint(message.logInfo());
   }
 }

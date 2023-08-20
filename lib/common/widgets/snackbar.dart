@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-snackbarInfo(BuildContext context, String message) {
+void snackbarInfo(BuildContext context, String message) {
   showTopSnackBar(
     animationDuration: const Duration(milliseconds: 1600),
     displayDuration: const Duration(
@@ -27,7 +25,7 @@ snackbarInfo(BuildContext context, String message) {
   );
 }
 
-snackbarSuccess(BuildContext context, String message) {
+void snackbarSuccess(BuildContext context, String message) {
   showTopSnackBar(
     animationDuration: const Duration(milliseconds: 1600),
     displayDuration: const Duration(
@@ -50,7 +48,7 @@ snackbarSuccess(BuildContext context, String message) {
   );
 }
 
-snackbarWarning(BuildContext context, String message) {
+void snackbarWarning(BuildContext context, String message) {
   showTopSnackBar(
     animationDuration: const Duration(milliseconds: 2000),
     displayDuration: const Duration(
@@ -73,7 +71,7 @@ snackbarWarning(BuildContext context, String message) {
   );
 }
 
-snackbarError(BuildContext context, String message) {
+void snackbarError(BuildContext context, String message) {
   showTopSnackBar(
     animationDuration: const Duration(milliseconds: 3000),
     displayDuration: const Duration(

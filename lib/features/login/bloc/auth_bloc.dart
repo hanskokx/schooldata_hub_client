@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -26,7 +25,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final session = Session.fromJson(
             json.decode(storedSession!) as Map<String, dynamic>,
           );
-
           if (JwtDecoder.isExpired(session.token!)) {
             await secureStorageDelete('session');
             Debug().warning('Session was not valid, deleted!');
@@ -36,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               ),
             );
           }
-
+          Debug().info('Leaving InitialState');
           emit(
             AuthenticatedState(
               username: session.username!,
@@ -46,7 +44,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         } catch (e) {
           Debug().error(
-              'Error reading session credentials from secureStorage: $e');
+            'Error reading session credentials from secureStorage: $e',
+          );
           // errorsController.add(e as Exception);
           await secureStorageDelete('pupilBase');
           emit(const AuthUnauthenticatedState());
@@ -63,8 +62,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(const AuthLoadingState());
       if (event.username == '' || event.password == '') {
-        emit(const AuthErrorState(
-            message: 'Die Felder dürfen nicht leer sein!'));
+        emit(
+          const AuthErrorState(
+            message: 'Die Felder dürfen nicht leer sein!',
+          ),
+        );
       }
       try {
         final String basicAuth =
@@ -78,9 +80,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         if (response.statusCode == 200) {
           Debug().info('Response: ${response.body.toString()}');
-          final String token = json.decode(response.body)['token'] as String;
+          final decodedResponse =
+              json.decode(response.body) as Map<String, dynamic>;
+          final String token = decodedResponse['token'] as String;
 
-          final bool isAdmin = json.decode(response.body)['admin'] as bool;
+          final bool isAdmin = decodedResponse['admin'] as bool;
           Debug().info('Is admin: $isAdmin');
 
           final Session newSession =
@@ -99,8 +103,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (response.statusCode == 401) {
             Debug().info('Response: ${response.body.toString()}');
             Debug().info('ERROR 401');
-            final String message =
-                json.decode(response.body)['message'] as String;
+            final decodedResponse =
+                json.decode(response.body) as Map<String, dynamic>;
+            final String message = decodedResponse['message'] as String;
             emit(AuthErrorState(message: message));
           } else {}
         }

@@ -21,3 +21,8 @@ class PupilBaseLoadedState extends PupilBaseState {
 class PupilBaseLoadingState extends PupilBaseState {
   const PupilBaseLoadingState() : super();
 }
+
+class PupilBaseErrorState extends PupilBaseState {
+  final String message;
+  const PupilBaseErrorState({required this.message}) : super();
+}

@@ -14,7 +14,7 @@ class PupilBaseStartEvent extends PupilBaseEvent {
 }
 
 class PupilBaseImportEvent extends PupilBaseEvent {
-  final String scannedResponse;
+  final String? scannedResponse;
   const PupilBaseImportEvent({required this.scannedResponse});
 }
 

@@ -17,27 +17,31 @@ class AttendanceListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final pupilBaseBloc = BlocProvider.of<PupilBaseBloc>(context);
     final authBloc = BlocProvider.of<AuthBloc>(context);
+
     return BlocBuilder(
       bloc: pupilBaseBloc,
       builder: (context, PupilBaseState pupilBaseState) {
         return Scaffold(
           body: Center(
             child: ElevatedButton(
-                onPressed: () async {
-                  Debug().info('Button pressed!!');
-                  final String? scanResponse = await scanner(context);
-                  if (scanResponse != null) {
-                    pupilBaseBloc.add(
-                        PupilBaseImportEvent(scannedResponse: scanResponse));
-                  } else {
-                    snackbarWarning(context, 'Scanvorgang abgebrochen');
-                  }
-                },
-                child: const Text('scan') // () => getPupilBase(pupilBaseList),
-                ),
+              onPressed: () async {
+                Debug().info('Button pressed!!');
+                final String? scanResponse = await scanner(context);
+                if (scanResponse != null) {
+                  pupilBaseBloc.add(
+                    PupilBaseImportEvent(scannedResponse: scanResponse),
+                  );
+                } else {
+                  snackbarWarning(context, 'Scanvorgang abgebrochen');
+                }
+              },
+              child: const Text('scan') // () => getPupilBase(pupilBaseList),
+              ,
+            ),
           ),
           floatingActionButton: FloatingActionButton(
-              onPressed: () => authBloc.add(SignOutEvent())),
+            onPressed: () => authBloc.add(SignOutEvent()),
+          ),
         );
       },
     );
