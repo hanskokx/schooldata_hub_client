@@ -96,11 +96,11 @@ Map<String, dynamic> _$$_AuthorizationToJson(_$_Authorization instance) =>
     };
 
 _$_Pupil _$$_PupilFromJson(Map<String, dynamic> json) => _$_Pupil(
-      fistName: json['fist_name'] as String? ?? null,
-      lastName: json['last_name'] as String? ?? null,
-      schoolyear: json['schoolyear'] as String? ?? null,
-      group: json['group'] as String? ?? null,
-      language: json['language'] as String? ?? null,
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      schoolyear: json['schoolyear'] as String?,
+      group: json['group'] as String?,
+      language: json['language'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       communicationPupil: json['communication_pupil'] as String?,
       communicationTutor1: json['communication_tutor1'] as String?,
@@ -142,7 +142,7 @@ _$_Pupil _$$_PupilFromJson(Map<String, dynamic> json) => _$_Pupil(
     );
 
 Map<String, dynamic> _$$_PupilToJson(_$_Pupil instance) => <String, dynamic>{
-      'fist_name': instance.fistName,
+      'first_name': instance.firstName,
       'last_name': instance.lastName,
       'schoolyear': instance.schoolyear,
       'group': instance.group,

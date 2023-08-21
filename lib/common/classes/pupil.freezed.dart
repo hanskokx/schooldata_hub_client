@@ -1143,7 +1143,7 @@ Pupil _$PupilFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Pupil {
-  String? get fistName => throw _privateConstructorUsedError;
+  String? get firstName => throw _privateConstructorUsedError;
   String? get lastName => throw _privateConstructorUsedError;
   String? get schoolyear => throw _privateConstructorUsedError;
   String? get group => throw _privateConstructorUsedError;
@@ -1183,7 +1183,7 @@ abstract class $PupilCopyWith<$Res> {
       _$PupilCopyWithImpl<$Res, Pupil>;
   @useResult
   $Res call(
-      {String? fistName,
+      {String? firstName,
       String? lastName,
       String? schoolyear,
       String? group,
@@ -1231,7 +1231,7 @@ class _$PupilCopyWithImpl<$Res, $Val extends Pupil>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fistName = freezed,
+    Object? firstName = freezed,
     Object? lastName = freezed,
     Object? schoolyear = freezed,
     Object? group = freezed,
@@ -1260,9 +1260,9 @@ class _$PupilCopyWithImpl<$Res, $Val extends Pupil>
     Object? pupilWorkbook = freezed,
   }) {
     return _then(_value.copyWith(
-      fistName: freezed == fistName
-          ? _value.fistName
-          : fistName // ignore: cast_nullable_to_non_nullable
+      firstName: freezed == firstName
+          ? _value.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
               as String?,
       lastName: freezed == lastName
           ? _value.lastName
@@ -1439,7 +1439,7 @@ abstract class _$$_PupilCopyWith<$Res> implements $PupilCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? fistName,
+      {String? firstName,
       String? lastName,
       String? schoolyear,
       String? group,
@@ -1488,7 +1488,7 @@ class __$$_PupilCopyWithImpl<$Res> extends _$PupilCopyWithImpl<$Res, _$_Pupil>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fistName = freezed,
+    Object? firstName = freezed,
     Object? lastName = freezed,
     Object? schoolyear = freezed,
     Object? group = freezed,
@@ -1517,9 +1517,9 @@ class __$$_PupilCopyWithImpl<$Res> extends _$PupilCopyWithImpl<$Res, _$_Pupil>
     Object? pupilWorkbook = freezed,
   }) {
     return _then(_$_Pupil(
-      fistName: freezed == fistName
-          ? _value.fistName
-          : fistName // ignore: cast_nullable_to_non_nullable
+      firstName: freezed == firstName
+          ? _value.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
               as String?,
       lastName: freezed == lastName
           ? _value.lastName
@@ -1634,11 +1634,11 @@ class __$$_PupilCopyWithImpl<$Res> extends _$PupilCopyWithImpl<$Res, _$_Pupil>
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$_Pupil implements _Pupil {
   const _$_Pupil(
-      {this.fistName = null,
-      this.lastName = null,
-      this.schoolyear = null,
-      this.group = null,
-      this.language = null,
+      {this.firstName,
+      this.lastName,
+      this.schoolyear,
+      this.group,
+      this.language,
       this.avatarUrl,
       this.communicationPupil,
       this.communicationTutor1,
@@ -1666,19 +1666,14 @@ class _$_Pupil implements _Pupil {
       _$$_PupilFromJson(json);
 
   @override
-  @JsonKey()
-  final String? fistName;
+  final String? firstName;
   @override
-  @JsonKey()
   final String? lastName;
   @override
-  @JsonKey()
   final String? schoolyear;
   @override
-  @JsonKey()
   final String? group;
   @override
-  @JsonKey()
   final String? language;
   @override
   final String? avatarUrl;
@@ -1727,7 +1722,7 @@ class _$_Pupil implements _Pupil {
 
   @override
   String toString() {
-    return 'Pupil(fistName: $fistName, lastName: $lastName, schoolyear: $schoolyear, group: $group, language: $language, avatarUrl: $avatarUrl, communicationPupil: $communicationPupil, communicationTutor1: $communicationTutor1, communicationTutor2: $communicationTutor2, credit: $credit, fiveYears: $fiveYears, individualDevelopmentPlan: $individualDevelopmentPlan, internalId: $internalId, migrationSupportEnds: $migrationSupportEnds, migrationFollowSupportEnds: $migrationFollowSupportEnds, ogs: $ogs, preschoolRevision: $preschoolRevision, specialInformation: $specialInformation, specialNeeds: $specialNeeds, id: $id, pupilId: $pupilId, status: $status, admonition: $admonition, missedClass: $missedClass, authorization: $authorization, pupilList: $pupilList, pupilWorkbook: $pupilWorkbook)';
+    return 'Pupil(firstName: $firstName, lastName: $lastName, schoolyear: $schoolyear, group: $group, language: $language, avatarUrl: $avatarUrl, communicationPupil: $communicationPupil, communicationTutor1: $communicationTutor1, communicationTutor2: $communicationTutor2, credit: $credit, fiveYears: $fiveYears, individualDevelopmentPlan: $individualDevelopmentPlan, internalId: $internalId, migrationSupportEnds: $migrationSupportEnds, migrationFollowSupportEnds: $migrationFollowSupportEnds, ogs: $ogs, preschoolRevision: $preschoolRevision, specialInformation: $specialInformation, specialNeeds: $specialNeeds, id: $id, pupilId: $pupilId, status: $status, admonition: $admonition, missedClass: $missedClass, authorization: $authorization, pupilList: $pupilList, pupilWorkbook: $pupilWorkbook)';
   }
 
   @override
@@ -1735,8 +1730,8 @@ class _$_Pupil implements _Pupil {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Pupil &&
-            (identical(other.fistName, fistName) ||
-                other.fistName == fistName) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
             (identical(other.schoolyear, schoolyear) ||
@@ -1792,7 +1787,7 @@ class _$_Pupil implements _Pupil {
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
-        fistName,
+        firstName,
         lastName,
         schoolyear,
         group,
@@ -1837,7 +1832,7 @@ class _$_Pupil implements _Pupil {
 
 abstract class _Pupil implements Pupil {
   const factory _Pupil(
-      {final String? fistName,
+      {final String? firstName,
       final String? lastName,
       final String? schoolyear,
       final String? group,
@@ -1868,7 +1863,7 @@ abstract class _Pupil implements Pupil {
   factory _Pupil.fromJson(Map<String, dynamic> json) = _$_Pupil.fromJson;
 
   @override
-  String? get fistName;
+  String? get firstName;
   @override
   String? get lastName;
   @override

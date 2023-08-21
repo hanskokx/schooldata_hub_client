@@ -18,7 +18,13 @@ class PupilBaseImportEvent extends PupilBaseEvent {
   const PupilBaseImportEvent({required this.scannedResponse});
 }
 
-class PupilBaseLoadEvent extends PupilBaseEvent {}
+class PupilBaseLoadEvent extends PupilBaseEvent {
+  const PupilBaseLoadEvent();
+}
+
+class PupilBaseLoadedEvent extends PupilBaseEvent {
+  const PupilBaseLoadedEvent();
+}
 
 class PupilBaseRemoveEvent extends PupilBaseEvent {
   final PupilBase pupilBase;

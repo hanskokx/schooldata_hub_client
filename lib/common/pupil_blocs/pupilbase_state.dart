@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:schooldata_hub_client/common/classes/pupil.dart';
 import 'package:schooldata_hub_client/common/classes/pupil_base.dart';
 
 @immutable
@@ -13,13 +14,18 @@ class PupilBaseInitialState extends PupilBaseState {
   const PupilBaseInitialState() : super();
 }
 
+class PupilBaseLoadingState extends PupilBaseState {
+  const PupilBaseLoadingState() : super();
+}
+
 class PupilBaseLoadedState extends PupilBaseState {
   final List<PupilBase> pupilBaseResult;
   const PupilBaseLoadedState({required this.pupilBaseResult}) : super();
 }
 
-class PupilBaseLoadingState extends PupilBaseState {
-  const PupilBaseLoadingState() : super();
+class PupilBaseFetchedState extends PupilBaseState {
+  final List<Pupil> pupilResult;
+  const PupilBaseFetchedState({required this.pupilResult}) : super();
 }
 
 class PupilBaseErrorState extends PupilBaseState {

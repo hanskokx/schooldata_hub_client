@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_bloc.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
+import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_bloc.dart';
 import 'package:schooldata_hub_client/features/attendance_list/screens/attendance_list_screen.dart';
 import 'package:schooldata_hub_client/features/login/bloc/auth_bloc.dart';
 import 'package:schooldata_hub_client/features/login/bloc/auth_event.dart';
@@ -21,6 +22,9 @@ Future<void> main() async {
         ),
         BlocProvider(
           create: (BuildContext context) => PupilBaseBloc(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => SchooldayBloc(),
         ),
       ],
       child: const MainApp(),

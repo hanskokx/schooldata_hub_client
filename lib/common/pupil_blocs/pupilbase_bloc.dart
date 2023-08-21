@@ -1,14 +1,18 @@
 import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:schooldata_hub_client/common/classes/pupil.dart';
 import 'package:schooldata_hub_client/common/classes/pupil_base.dart';
 import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_event.dart';
 import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_state.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
+import 'package:schooldata_hub_client/features/login/classes/session_model.dart';
 
 class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
-  final List<PupilBase> _storedPupilBase = <PupilBase>[];
+  List<PupilBase> _storedPupilBase = <PupilBase>[];
+  List<Pupil> _fetchedPupils = <Pupil>[];
+  List<Pupil> _matchedPupils = <Pupil>[];
   PupilBaseBloc() : super(const PupilBaseInitialState()) {
     on<PupilBaseEvent>((event, emit) async {
       //- Case Start Event:
@@ -17,13 +21,18 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
         final bool pupilBaseExists =
             await secureStorage.containsKey(key: 'pupilBase');
         if (pupilBaseExists == true) {
+          Debug().info('PupilBase found');
           final String? storedPupilBaseAsString =
               await secureStorageRead('pupilBase');
-          final List<PupilBase> storedPupilBase =
-              jsonDecode(storedPupilBaseAsString!) as List<PupilBase>;
-          for (final storedPupil in storedPupilBase) {
-            _storedPupilBase.add(storedPupil);
-          }
+          Debug().info('stored string $storedPupilBaseAsString');
+          final List storedPupilBase =
+              jsonDecode(storedPupilBaseAsString!) as List;
+
+          _storedPupilBase = storedPupilBase
+              .map((e) => PupilBase.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+          Debug().info('Random Stored pupil ${_storedPupilBase[0].firstName}');
           emit(PupilBaseLoadedState(pupilBaseResult: _storedPupilBase));
         } else {}
       }
@@ -73,6 +82,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
             }
             //Write the result to storage
             await secureStorageWrite('pupilBase', jsonEncode(_storedPupilBase));
+            emit(PupilBaseLoadedState(pupilBaseResult: _storedPupilBase));
           }
         } catch (e) {
           // TODO: error description
@@ -88,6 +98,69 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
           //Write the result to storage
           await secureStorageWrite('pupilBase', jsonEncode(_storedPupilBase));
         }
+      }
+    });
+
+    on<PupilBaseLoadedEvent>((event, emit) async {
+      final String? storedSession = await secureStorageRead('session');
+      Debug().warning('Session found! $storedSession');
+      final session = Session.fromJson(
+        json.decode(storedSession!) as Map<String, dynamic>,
+      );
+      final String token = session.token!;
+      final List _idsToFetch = [];
+      for (final PupilBase pupilBase in _storedPupilBase) {
+        _idsToFetch.add(pupilBase.id);
+      }
+      final requestBody = jsonEncode(<String, dynamic>{"pupils": _idsToFetch});
+      Debug().success('requestBody is $requestBody');
+      try {
+        final response = await http.post(
+          Uri.parse('https://daten.medien-sandkasten.de/api/pupil/list'),
+          headers: {"x-access-token": token.toString()},
+          body: requestBody,
+        );
+        Debug().info('Request sent!');
+
+        if (response.statusCode == 200) {
+          Debug().info('Response: ${response.body.toString()}');
+
+          final List decodedResponse = json.decode(response.body) as List;
+          _fetchedPupils = decodedResponse
+              .map((e) => Pupil.fromJson(e as Map<String, dynamic>))
+              .toList();
+          for (final PupilBase pupilBaseElement in _storedPupilBase) {
+            if (_fetchedPupils
+                .where((element) => element.internalId == pupilBaseElement.id)
+                .isNotEmpty) {
+              final Pupil pupilMatch = _fetchedPupils
+                  .where((element) => element.internalId == pupilBaseElement.id)
+                  .single;
+              _matchedPupils.add(
+                pupilMatch.copyWith(
+                  firstName: pupilBaseElement.firstName,
+                  lastName: pupilBaseElement.lastName,
+                  group: pupilBaseElement.group,
+                  schoolyear: pupilBaseElement.schoolyear,
+                  language: pupilBaseElement.language,
+                ),
+              );
+            }
+          }
+          emit(PupilBaseFetchedState(pupilResult: _fetchedPupils));
+        } else {
+          if (response.statusCode == 401) {
+            Debug().info('Response: ${response.body.toString()}');
+            Debug().info('ERROR 401');
+            final decodedResponse =
+                json.decode(response.body) as Map<String, dynamic>;
+            final String message = decodedResponse['message'] as String;
+            emit(PupilBaseErrorState(message: message));
+          } else {}
+        }
+      } catch (e) {
+        Debug().info('This error is catched!');
+        emit(PupilBaseErrorState(message: 'ERROR $e'));
       }
     });
   }

@@ -17,7 +17,9 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
 
   SchooldayBloc() : super(const SchooldayInitialState()) {
     on<SchooldayStartEvent>(
-      (event, emit) {},
+      (event, emit) {
+        emit(SchooldayLoadingState());
+      },
     );
     on<SchooldayLoadingEvent>(
       (event, emit) async {
@@ -25,7 +27,6 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
         emit(const SchooldayLoadingState());
         final String? storedSession = await secureStorageRead('session');
         Debug().warning('Session found! $storedSession');
-
         final session = Session.fromJson(
           json.decode(storedSession!) as Map<String, dynamic>,
         );

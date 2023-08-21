@@ -15,8 +15,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(const AuthInitialState()) {
     //-Start app event
     on<StartAppEvent>((event, emit) async {
-      Debug().info('Looking for stored session!');
       //first test if session credentials are stored and valid
+      Debug().info('Looking for stored session!');
 
       if (await secureStorageContains('session') == true) {
         final String? storedSession = await secureStorageRead('session');
@@ -61,13 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         'Sign in event received username ${event.username} password ${event.password}',
       );
       emit(const AuthLoadingState());
-      if (event.username == '' || event.password == '') {
-        emit(
-          const AuthErrorState(
-            message: 'Die Felder dürfen nicht leer sein!',
-          ),
-        );
-      }
+
       try {
         final String basicAuth =
             'Basic ${base64Encode(utf8.encode('${event.username}:${event.password}'))}';

@@ -77,11 +77,11 @@ class Authorization with _$Authorization {
 class Pupil with _$Pupil {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory Pupil({
-    @Default(null) String? fistName,
-    @Default(null) String? lastName,
-    @Default(null) String? schoolyear,
-    @Default(null) String? group,
-    @Default(null) String? language,
+    String? firstName,
+    String? lastName,
+    String? schoolyear,
+    String? group,
+    String? language,
     String? avatarUrl,
     String? communicationPupil,
     String? communicationTutor1,
