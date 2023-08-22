@@ -23,16 +23,19 @@ Future<void> injectorSetup(GetIt getIt) async {
     getIt.registerLazySingleton<AuthBloc>(
       () => AuthBloc(
         getIt<AuthApi>(),
+        getIt<FlutterSecureStorage>(),
       ),
     );
     getIt.registerLazySingleton<PupilBaseBloc>(
       () => PupilBaseBloc(
         getIt<PupilBaseApi>(),
+        getIt<FlutterSecureStorage>(),
       ),
     );
     getIt.registerLazySingleton<SchooldayBloc>(
       () => SchooldayBloc(
         getIt<SchooldayApi>(),
+        getIt<FlutterSecureStorage>(),
       ),
     );
   }

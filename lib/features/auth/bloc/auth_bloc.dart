@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
-import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
 import 'package:schooldata_hub_client/features/auth/api/auth_api.dart';
 import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
 
@@ -15,21 +15,22 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthApi api;
-  AuthBloc(this.api) : super(const AuthInitialState()) {
+  final FlutterSecureStorage storage;
+  AuthBloc(this.api, this.storage) : super(const AuthInitialState()) {
     //-Start app event
     on<StartAppEvent>((event, emit) async {
       //first test if session credentials are stored and valid
       Debug().info('Looking for stored session!');
 
-      if (await secureStorageContains('session') == true) {
-        final String? storedSession = await secureStorageRead('session');
+      if (await storage.containsKey(key: 'session') == true) {
+        final String? storedSession = await storage.read(key: 'session');
         Debug().warning('Session found! $storedSession');
         try {
           final session = Session.fromJson(
             json.decode(storedSession!) as Map<String, dynamic>,
           );
           if (JwtDecoder.isExpired(session.token!)) {
-            await secureStorageDelete('session');
+            await storage.delete(key: 'session');
             Debug().warning('Session was not valid, deleted!');
             emit(
               const AuthErrorState(
@@ -50,7 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             'Error reading session credentials from secureStorage: $e',
           );
           // errorsController.add(e as Exception);
-          await secureStorageDelete('pupilBase');
+          await storage.delete(key: 'pupilBase');
           emit(const AuthUnauthenticatedState());
         }
       } else {
@@ -87,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final Session newSession =
               Session(username: event.username, token: token, isAdmin: isAdmin);
           final jsonSession = json.encode(newSession.toJson());
-          await secureStorageWrite('session', jsonSession);
+          await storage.write(key: 'session', value: jsonSession);
           Debug().warning('Session stored! $jsonSession');
           emit(
             AuthenticatedState(
@@ -114,7 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignOutEvent>(
       (event, emit) async {
-        await secureStorageDelete('session');
+        await storage.delete(key: 'session');
         Debug().info('Session deleted!');
         emit(const AuthUnauthenticatedState());
       },

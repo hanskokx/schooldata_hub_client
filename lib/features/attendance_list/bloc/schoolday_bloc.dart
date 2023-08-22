@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/extensions.dart';
-import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
 import 'package:schooldata_hub_client/features/attendance_list/api/schoolday_api.dart';
 import 'package:schooldata_hub_client/features/attendance_list/classes/schoolday_model.dart';
 import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
@@ -15,9 +15,10 @@ part 'schoolday_state.dart';
 
 class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
   final SchooldayApi api;
+  final FlutterSecureStorage storage;
   List<Schoolday> _schooldays = <Schoolday>[];
 
-  SchooldayBloc(this.api) : super(const SchooldayInitialState()) {
+  SchooldayBloc(this.api, this.storage) : super(const SchooldayInitialState()) {
     on<SchooldayStartEvent>(
       (event, emit) {
         emit(const SchooldayLoadingState());
@@ -27,7 +28,7 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
       (event, emit) async {
         Debug().warning('Schoolday Bloc triggered');
         emit(const SchooldayLoadingState());
-        final String? storedSession = await secureStorageRead('session');
+        final String? storedSession = await storage.read(key: 'session');
         Debug().warning('Session found! $storedSession');
         final session = Session.fromJson(
           json.decode(storedSession!) as Map<String, dynamic>,

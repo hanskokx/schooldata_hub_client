@@ -14,13 +14,13 @@ class AppBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthBloc(GetIt.I()),
+          create: (context) => AuthBloc(GetIt.I(), GetIt.I()),
         ),
         BlocProvider(
-          create: (context) => PupilBaseBloc(GetIt.I()),
+          create: (context) => PupilBaseBloc(GetIt.I(), GetIt.I()),
         ),
         BlocProvider(
-          create: (context) => SchooldayBloc(GetIt.I()),
+          create: (context) => SchooldayBloc(GetIt.I(), GetIt.I()),
         ),
       ],
       child: child,

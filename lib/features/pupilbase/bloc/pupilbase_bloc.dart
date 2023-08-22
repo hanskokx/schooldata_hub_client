@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:schooldata_hub_client/common/classes/pupil.dart';
 import 'package:schooldata_hub_client/common/classes/pupil_base.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
-import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
 import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
 import 'package:schooldata_hub_client/features/pupilbase/api/pupilbase_api.dart';
 
@@ -15,20 +15,22 @@ part 'pupilbase_state.dart';
 
 class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
   final PupilBaseApi api;
+  final FlutterSecureStorage storage;
+
   List<PupilBase> _storedPupilBase = <PupilBase>[];
   List<Pupil> _fetchedPupils = <Pupil>[];
   final List<Pupil> _matchedPupils = <Pupil>[];
-  PupilBaseBloc(this.api) : super(const PupilBaseInitialState()) {
+  PupilBaseBloc(this.api, this.storage) : super(const PupilBaseInitialState()) {
     on<PupilBaseEvent>((event, emit) async {
       //- Case Start Event:
       // When the app starts it should check if there is a PupilBase in storage
       if (event is PupilBaseStartEvent) {
         final bool pupilBaseExists =
-            await secureStorage.containsKey(key: 'pupilBase');
+            await storage.containsKey(key: 'pupilBase');
         if (pupilBaseExists == true) {
           Debug().info('PupilBase found');
           final String? storedPupilBaseAsString =
-              await secureStorageRead('pupilBase');
+              await storage.read(key: 'pupilBase');
           Debug().info('stored string $storedPupilBaseAsString');
           final List storedPupilBase =
               jsonDecode(storedPupilBaseAsString!) as List;
@@ -86,7 +88,10 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
               }
             }
             //Write the result to storage
-            await secureStorageWrite('pupilBase', jsonEncode(_storedPupilBase));
+            await storage.write(
+              key: 'pupilBase',
+              value: jsonEncode(_storedPupilBase),
+            );
             emit(PupilBaseLoadedState(pupilBaseResult: _storedPupilBase));
           }
         } catch (e) {
@@ -101,13 +106,16 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
             .isEmpty) {
           _storedPupilBase.remove(event.pupilBase);
           //Write the result to storage
-          await secureStorageWrite('pupilBase', jsonEncode(_storedPupilBase));
+          await storage.write(
+            key: 'pupilBase',
+            value: jsonEncode(_storedPupilBase),
+          );
         }
       }
     });
 
     on<PupilBaseLoadedEvent>((event, emit) async {
-      final String? storedSession = await secureStorageRead('session');
+      final String? storedSession = await storage.read(key: 'session');
       Debug().warning('Session found! $storedSession');
       final session = Session.fromJson(
         json.decode(storedSession!) as Map<String, dynamic>,
