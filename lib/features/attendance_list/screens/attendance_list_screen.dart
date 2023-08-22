@@ -57,7 +57,8 @@ class AttendanceListScreen extends StatelessWidget {
                   }
                 },
                 child: const Text(
-                    'Scan pupil IDs to see data') // () => getPupilBase(pupilBaseList),
+                  'Scan pupil IDs to see data',
+                ) // () => getPupilBase(pupilBaseList),
                 ,
               ),
             ),

@@ -12,7 +12,7 @@ import 'package:schooldata_hub_client/features/login/classes/session_model.dart'
 class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
   List<PupilBase> _storedPupilBase = <PupilBase>[];
   List<Pupil> _fetchedPupils = <Pupil>[];
-  List<Pupil> _matchedPupils = <Pupil>[];
+  final List<Pupil> _matchedPupils = <Pupil>[];
   PupilBaseBloc() : super(const PupilBaseInitialState()) {
     on<PupilBaseEvent>((event, emit) async {
       //- Case Start Event:
@@ -48,7 +48,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
             Debug().info('Scan result: $scanResult');
 
             // The '***' flag is to ensure that this is our pupilbase qr, otherwise it will give an error
-            if (scanResult!.substring(0, 3) != '***') {
+            if (scanResult.substring(0, 3) != '***') {
               Debug().error('Scan result is not a PupilBase QR: $scanResult');
             }
 
@@ -108,11 +108,11 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
         json.decode(storedSession!) as Map<String, dynamic>,
       );
       final String token = session.token!;
-      final List _idsToFetch = [];
+      final List idsToFetch = [];
       for (final PupilBase pupilBase in _storedPupilBase) {
-        _idsToFetch.add(pupilBase.id);
+        idsToFetch.add(pupilBase.id);
       }
-      final requestBody = jsonEncode(<String, dynamic>{"pupils": _idsToFetch});
+      final requestBody = jsonEncode(<String, dynamic>{"pupils": idsToFetch});
       Debug().success('requestBody is $requestBody');
       try {
         final response = await http.post(

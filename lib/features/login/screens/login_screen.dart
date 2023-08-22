@@ -68,7 +68,9 @@ class LoginScreen extends StatelessWidget {
                                 ),
                               )
                           : snackbarWarning(
-                              context, 'Beide Felder müssen ausgefüllt sein!');
+                              context,
+                              'Beide Felder müssen ausgefüllt sein!',
+                            );
                     },
                     child: const Text('Login'),
                   ),

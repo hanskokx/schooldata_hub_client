@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:schooldata_hub_client/features/attendance_list/classes/schoolday_model.dart';
 
 @immutable
 abstract class SchooldayEvent extends Equatable {

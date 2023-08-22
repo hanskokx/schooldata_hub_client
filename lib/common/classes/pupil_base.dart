@@ -89,6 +89,6 @@ abstract class PupilBaseList with _$PupilBaseList {
   const factory PupilBaseList({
     required List<PupilBase> pupilBaseList,
   }) = _PupilBaseList;
-  factory PupilBaseList.fromJson(Map<String, dynamic> json, {required}) =>
+  factory PupilBaseList.fromJson(Map<String, dynamic> json) =>
       _$PupilBaseListFromJson(json);
 }

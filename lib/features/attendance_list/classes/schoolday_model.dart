@@ -13,8 +13,6 @@ abstract class Schoolday with _$Schoolday {
       _$SchooldayFromJson(json);
 }
 
-
-
 // // To parse this JSON data, do
 // //
 // //     final schoolday = schooldayFromJson(jsonString);

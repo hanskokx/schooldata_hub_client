@@ -1,15 +1,13 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/extensions.dart';
 import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
 import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_event.dart';
 import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_state.dart';
 import 'package:schooldata_hub_client/features/attendance_list/classes/schoolday_model.dart';
-import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/features/login/classes/session_model.dart';
 
 class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
@@ -18,7 +16,7 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
   SchooldayBloc() : super(const SchooldayInitialState()) {
     on<SchooldayStartEvent>(
       (event, emit) {
-        emit(SchooldayLoadingState());
+        emit(const SchooldayLoadingState());
       },
     );
     on<SchooldayLoadingEvent>(
