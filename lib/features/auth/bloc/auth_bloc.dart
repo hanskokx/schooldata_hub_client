@@ -20,25 +20,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //-Start app event
     on<StartAppEvent>((event, emit) async {
       //first test if session credentials are stored and valid
-      Debug().info('Looking for stored session!');
+      Debug.info('Looking for stored session!');
 
       if (await storage.containsKey(key: 'session') == true) {
         final String? storedSession = await storage.read(key: 'session');
-        Debug().warning('Session found! $storedSession');
+        Debug.warning('Session found! $storedSession');
         try {
           final session = Session.fromJson(
             json.decode(storedSession!) as Map<String, dynamic>,
           );
           if (JwtDecoder.isExpired(session.token!)) {
             await storage.delete(key: 'session');
-            Debug().warning('Session was not valid, deleted!');
+            Debug.warning('Session was not valid, deleted!');
             emit(
               const AuthErrorState(
                 message: 'Token nicht mehr gültig, bitte wieder einloggen!',
               ),
             );
           }
-          Debug().info('Leaving InitialState');
+          Debug.info('Leaving InitialState');
           emit(
             AuthenticatedState(
               username: session.username!,
@@ -47,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ),
           );
         } catch (e) {
-          Debug().error(
+          Debug.error(
             'Error reading session credentials from secureStorage: $e',
           );
           // errorsController.add(e as Exception);
@@ -55,13 +55,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(const AuthUnauthenticatedState());
         }
       } else {
-        Debug().info('No session found');
+        Debug.info('No session found');
         emit(const AuthUnauthenticatedState());
       }
     });
 
     on<SignInEvent>((event, emit) async {
-      Debug().info(
+      Debug.info(
         'Sign in event received username ${event.username} password ${event.password}',
       );
       emit(const AuthLoadingState());
@@ -74,22 +74,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           Uri.parse('https://daten.medien-sandkasten.de/api/login'),
           headers: {HttpHeaders.authorizationHeader: basicAuth},
         );
-        Debug().info('Request sent with: $basicAuth');
+        Debug.info('Request sent with: $basicAuth');
 
         if (response.statusCode == 200) {
-          Debug().info('Response: ${response.body.toString()}');
+          Debug.info('Response: ${response.body.toString()}');
           final decodedResponse =
               json.decode(response.body) as Map<String, dynamic>;
           final String token = decodedResponse['token'] as String;
 
           final bool isAdmin = decodedResponse['admin'] as bool;
-          Debug().info('Is admin: $isAdmin');
+          Debug.info('Is admin: $isAdmin');
 
           final Session newSession =
               Session(username: event.username, token: token, isAdmin: isAdmin);
           final jsonSession = json.encode(newSession.toJson());
           await storage.write(key: 'session', value: jsonSession);
-          Debug().warning('Session stored! $jsonSession');
+          Debug.warning('Session stored! $jsonSession');
           emit(
             AuthenticatedState(
               username: event.username,
@@ -99,8 +99,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         } else {
           if (response.statusCode == 401) {
-            Debug().info('Response: ${response.body.toString()}');
-            Debug().info('ERROR 401');
+            Debug.info('Response: ${response.body.toString()}');
+            Debug.info('ERROR 401');
             final decodedResponse =
                 json.decode(response.body) as Map<String, dynamic>;
             final String message = decodedResponse['message'] as String;
@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           } else {}
         }
       } catch (e) {
-        Debug().info('This error is catched!');
+        Debug.info('This error is catched!');
         emit(AuthErrorState(message: 'ERROR $e'));
       }
     });
@@ -116,7 +116,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutEvent>(
       (event, emit) async {
         await storage.delete(key: 'session');
-        Debug().info('Session deleted!');
+        Debug.info('Session deleted!');
         emit(const AuthUnauthenticatedState());
       },
     );

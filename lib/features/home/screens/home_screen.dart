@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         context.read<AuthBloc>().add(const StartAppEvent());
-        Debug().info('State is $state');
+        Debug.info('State is $state');
 
         if (state is AuthenticatedState) {
           return const AttendanceListScreen();

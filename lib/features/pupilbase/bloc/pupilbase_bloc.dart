@@ -28,10 +28,10 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
         final bool pupilBaseExists =
             await storage.containsKey(key: 'pupilBase');
         if (pupilBaseExists == true) {
-          Debug().info('PupilBase found');
+          Debug.info('PupilBase found');
           final String? storedPupilBaseAsString =
               await storage.read(key: 'pupilBase');
-          Debug().info('stored string $storedPupilBaseAsString');
+          Debug.info('stored string $storedPupilBaseAsString');
           final List storedPupilBase =
               jsonDecode(storedPupilBaseAsString!) as List;
 
@@ -39,7 +39,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
               .map((e) => PupilBase.fromJson(e as Map<String, dynamic>))
               .toList();
 
-          Debug().info('Random Stored pupil ${_storedPupilBase[0].firstName}');
+          Debug.info('Random Stored pupil ${_storedPupilBase[0].firstName}');
           emit(PupilBaseLoadedState(pupilBaseResult: _storedPupilBase));
         } else {}
       }
@@ -49,14 +49,14 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
         try {
           final String? scanResult = event.scannedResponse;
           if (scanResult == "-1") {
-            Debug().info('Scan result: scanAborted');
+            Debug.info('Scan result: scanAborted');
           }
           if (scanResult != null) {
-            Debug().info('Scan result: $scanResult');
+            Debug.info('Scan result: $scanResult');
 
             // The '***' flag is to ensure that this is our pupilbase qr, otherwise it will give an error
             if (scanResult.substring(0, 3) != '***') {
-              Debug().error('Scan result is not a PupilBase QR: $scanResult');
+              Debug.error('Scan result is not a PupilBase QR: $scanResult');
             }
 
             // Let's take the '***' out of the string
@@ -64,7 +64,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
 
             // The pupils in the string are separated by a '#' - let's split them out
             final List<String> splittedPupils = pupilBaseRaw.split('#');
-            Debug().info('splitted pupilBases are $splittedPupils');
+            Debug.info('splitted pupilBases are $splittedPupils');
 
             // The properties are separated by commas, let's build the pupilbase objects with them
             final scannedPupilBase = splittedPupils
@@ -116,7 +116,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
 
     on<PupilBaseLoadedEvent>((event, emit) async {
       final String? storedSession = await storage.read(key: 'session');
-      Debug().warning('Session found! $storedSession');
+      Debug.warning('Session found! $storedSession');
       final session = Session.fromJson(
         json.decode(storedSession!) as Map<String, dynamic>,
       );
@@ -126,17 +126,17 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
         idsToFetch.add(pupilBase.id);
       }
       final requestBody = jsonEncode(<String, dynamic>{"pupils": idsToFetch});
-      Debug().success('requestBody is $requestBody');
+      Debug.success('requestBody is $requestBody');
       try {
         final response = await http.post(
           Uri.parse('https://daten.medien-sandkasten.de/api/pupil/list'),
           headers: {"x-access-token": token.toString()},
           body: requestBody,
         );
-        Debug().info('Request sent!');
+        Debug.info('Request sent!');
 
         if (response.statusCode == 200) {
-          Debug().info('Response: ${response.body.toString()}');
+          Debug.info('Response: ${response.body.toString()}');
 
           final List decodedResponse = json.decode(response.body) as List;
           _fetchedPupils = decodedResponse
@@ -163,8 +163,8 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
           emit(PupilBaseFetchedState(pupilResult: _fetchedPupils));
         } else {
           if (response.statusCode == 401) {
-            Debug().info('Response: ${response.body.toString()}');
-            Debug().info('ERROR 401');
+            Debug.info('Response: ${response.body.toString()}');
+            Debug.info('ERROR 401');
             final decodedResponse =
                 json.decode(response.body) as Map<String, dynamic>;
             final String message = decodedResponse['message'] as String;
@@ -172,7 +172,7 @@ class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
           } else {}
         }
       } catch (e) {
-        Debug().info('This error is catched!');
+        Debug.info('This error is catched!');
         emit(PupilBaseErrorState(message: 'ERROR $e'));
       }
     });

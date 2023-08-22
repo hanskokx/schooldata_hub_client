@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
     bool? authenticated;
     return BlocListener<PupilBaseBloc, PupilBaseState>(
       listener: (context, state) {
-        Debug().success('I can read this!');
+        Debug.success('I can read this!');
         context.read<PupilBaseBloc>().add(
               const PupilBaseStartEvent(),
             );
@@ -29,8 +29,9 @@ class LoginScreen extends StatelessWidget {
           if (state is AuthenticatedState) {
             BlocProvider.of<PupilBaseBloc>(context)
                 .add(const PupilBaseStartEvent());
-            Debug()
-                .success('Bool authenticated is ${authenticated!.toString()}');
+            Debug.success(
+              'Bool authenticated is ${authenticated!.toString()}',
+            );
           }
         },
         builder: (BuildContext context, AuthState state) {
@@ -52,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      Debug().info('Button pressed');
+                      Debug.info('Button pressed');
                       //final authBloc = BlocProvider.of<AuthBloc>(context);
                       _usernameController.text != '' &&
                               _passwordController.text != ''

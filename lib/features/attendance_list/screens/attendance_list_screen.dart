@@ -40,7 +40,7 @@ class AttendanceListScreen extends StatelessWidget {
             body: Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  Debug().info('Button pressed!!');
+                  Debug.info('Button pressed!!');
                   final String? scanResponse = await scanner(context);
                   if (scanResponse != null) {
                     pupilBaseBloc.add(

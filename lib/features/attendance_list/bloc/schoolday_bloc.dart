@@ -26,10 +26,10 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
     );
     on<SchooldayLoadingEvent>(
       (event, emit) async {
-        Debug().warning('Schoolday Bloc triggered');
+        Debug.warning('Schoolday Bloc triggered');
         emit(const SchooldayLoadingState());
         final String? storedSession = await storage.read(key: 'session');
-        Debug().warning('Session found! $storedSession');
+        Debug.warning('Session found! $storedSession');
         final session = Session.fromJson(
           json.decode(storedSession!) as Map<String, dynamic>,
         );
@@ -40,22 +40,22 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
             Uri.parse('https://daten.medien-sandkasten.de/api/schoolday/only'),
             headers: {"x-access-token": token.toString()},
           );
-          Debug().info('Request sent!');
+          Debug.info('Request sent!');
 
           if (response.statusCode == 200) {
-            Debug().info('Response: ${response.body.toString()}');
+            Debug.info('Response: ${response.body.toString()}');
 
             final List decodedResponse = json.decode(response.body) as List;
             _schooldays = decodedResponse
                 .map((e) => Schoolday.fromJson(e as Map<String, dynamic>))
                 .toList();
 
-            Debug().warning('Session stored! $_schooldays');
+            Debug.warning('Session stored! $_schooldays');
             emit(SchooldayLoadedState(schooldayResult: _schooldays));
           } else {
             if (response.statusCode == 401) {
-              Debug().info('Response: ${response.body.toString()}');
-              Debug().info('ERROR 401');
+              Debug.info('Response: ${response.body.toString()}');
+              Debug.info('ERROR 401');
               final decodedResponse =
                   json.decode(response.body) as Map<String, dynamic>;
               final String message = decodedResponse['message'] as String;
@@ -63,7 +63,7 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
             } else {}
           }
         } catch (e) {
-          Debug().info('This error is catched!');
+          Debug.info('This error is catched!');
           emit(SchooldayErrorState(message: 'ERROR $e'));
         }
       },
@@ -79,7 +79,7 @@ class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
                     : element,
           );
           final DateTime selectedDate = closestSchooldayToNow.schoolday;
-          Debug().success('thisDateProvider: ${selectedDate.formatForUser()}');
+          Debug.success('thisDateProvider: ${selectedDate.formatForUser()}');
           emit(
             SchooldaySelectedDateState(
               newSelectedDate: selectedDate,
