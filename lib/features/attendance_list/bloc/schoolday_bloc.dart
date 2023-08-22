@@ -1,19 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/extensions.dart';
 import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
-import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_event.dart';
-import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_state.dart';
+import 'package:schooldata_hub_client/features/attendance_list/api/schoolday_api.dart';
 import 'package:schooldata_hub_client/features/attendance_list/classes/schoolday_model.dart';
-import 'package:schooldata_hub_client/features/login/classes/session_model.dart';
+import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
+
+part 'schoolday_event.dart';
+part 'schoolday_state.dart';
 
 class SchooldayBloc extends Bloc<SchooldayEvent, SchooldayState> {
+  final SchooldayApi api;
   List<Schoolday> _schooldays = <Schoolday>[];
 
-  SchooldayBloc() : super(const SchooldayInitialState()) {
+  SchooldayBloc(this.api) : super(const SchooldayInitialState()) {
     on<SchooldayStartEvent>(
       (event, emit) {
         emit(const SchooldayLoadingState());

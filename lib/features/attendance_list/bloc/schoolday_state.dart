@@ -1,24 +1,12 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:schooldata_hub_client/features/attendance_list/classes/schoolday_model.dart';
+part of 'schoolday_bloc.dart';
 
-@immutable
-abstract class SchooldayState extends Equatable {
-  final DateTime? selectedDate;
-  const SchooldayState({
-    this.selectedDate,
-  });
-
-  @override
-  List<Object> get props => [];
+class SchooldayErrorState extends SchooldayState {
+  final String message;
+  const SchooldayErrorState({required this.message});
 }
 
 class SchooldayInitialState extends SchooldayState {
   const SchooldayInitialState() : super();
-}
-
-class SchooldayLoadingState extends SchooldayState {
-  const SchooldayLoadingState() : super();
 }
 
 class SchooldayLoadedState extends SchooldayState {
@@ -29,6 +17,10 @@ class SchooldayLoadedState extends SchooldayState {
   });
 }
 
+class SchooldayLoadingState extends SchooldayState {
+  const SchooldayLoadingState() : super();
+}
+
 class SchooldaySelectedDateState extends SchooldayState {
   final DateTime newSelectedDate;
 
@@ -37,9 +29,12 @@ class SchooldaySelectedDateState extends SchooldayState {
   }) : super(selectedDate: newSelectedDate);
 }
 
-class SchooldayErrorState extends SchooldayState {
-  final String message;
-  const SchooldayErrorState({required this.message});
+@immutable
+abstract class SchooldayState {
+  final DateTime? selectedDate;
+  const SchooldayState({
+    this.selectedDate,
+  });
 }
 // abstract class SchooldaysState extends Equatable {
 //   final bool isAuthenticated;

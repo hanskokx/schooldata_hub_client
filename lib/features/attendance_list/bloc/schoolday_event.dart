@@ -1,15 +1,12 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'schoolday_bloc.dart';
 
 @immutable
-abstract class SchooldayEvent extends Equatable {
+abstract class SchooldayEvent {
   const SchooldayEvent();
-  @override
-  List<Object> get props => [];
 }
 
-class SchooldayStartEvent extends SchooldayEvent {
-  const SchooldayStartEvent();
+class SchooldayLoadedEvent extends SchooldayEvent {
+  const SchooldayLoadedEvent();
 }
 
 class SchooldayLoadingEvent extends SchooldayEvent {
@@ -23,6 +20,6 @@ class SchooldaySelectedDateEvent extends SchooldayEvent {
   });
 }
 
-class SchooldayLoadedEvent extends SchooldayEvent {
-  const SchooldayLoadedEvent();
+class SchooldayStartEvent extends SchooldayEvent {
+  const SchooldayStartEvent();
 }

@@ -1,11 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'auth_bloc.dart';
 
 @immutable
-abstract class AuthEvent extends Equatable {
+abstract class AuthEvent {
   const AuthEvent();
-  @override
-  List<Object> get props => [];
 }
 
 class StartAppEvent extends AuthEvent {

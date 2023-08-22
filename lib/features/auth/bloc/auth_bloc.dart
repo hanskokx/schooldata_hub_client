@@ -2,17 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
-import 'package:schooldata_hub_client/features/login/classes/session_model.dart';
+import 'package:schooldata_hub_client/features/auth/api/auth_api.dart';
+import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
 
-import 'auth_event.dart';
-import 'auth_state.dart';
+part 'auth_event.dart';
+part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(const AuthInitialState()) {
+  final AuthApi api;
+  AuthBloc(this.api) : super(const AuthInitialState()) {
     //-Start app event
     on<StartAppEvent>((event, emit) async {
       //first test if session credentials are stored and valid

@@ -1,19 +1,24 @@
 import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:schooldata_hub_client/common/classes/pupil.dart';
 import 'package:schooldata_hub_client/common/classes/pupil_base.dart';
-import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_event.dart';
-import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_state.dart';
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/secure_storage.dart';
-import 'package:schooldata_hub_client/features/login/classes/session_model.dart';
+import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
+import 'package:schooldata_hub_client/features/pupilbase/api/pupilbase_api.dart';
+
+part 'pupilbase_event.dart';
+part 'pupilbase_state.dart';
 
 class PupilBaseBloc extends Bloc<PupilBaseEvent, PupilBaseState> {
+  final PupilBaseApi api;
   List<PupilBase> _storedPupilBase = <PupilBase>[];
   List<Pupil> _fetchedPupils = <Pupil>[];
   final List<Pupil> _matchedPupils = <Pupil>[];
-  PupilBaseBloc() : super(const PupilBaseInitialState()) {
+  PupilBaseBloc(this.api) : super(const PupilBaseInitialState()) {
     on<PupilBaseEvent>((event, emit) async {
       //- Case Start Event:
       // When the app starts it should check if there is a PupilBase in storage

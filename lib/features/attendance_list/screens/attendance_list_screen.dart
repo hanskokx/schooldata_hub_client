@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_bloc.dart';
-import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_event.dart';
-import 'package:schooldata_hub_client/common/pupil_blocs/pupilbase_state.dart';
-
 import 'package:schooldata_hub_client/common/utils/debug_printer.dart';
 import 'package:schooldata_hub_client/common/utils/scanner.dart';
 import 'package:schooldata_hub_client/common/widgets/snackbar.dart';
 import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_bloc.dart';
-import 'package:schooldata_hub_client/features/login/bloc/auth_bloc.dart';
-import 'package:schooldata_hub_client/features/login/bloc/auth_event.dart';
+import 'package:schooldata_hub_client/features/auth/bloc/auth_bloc.dart';
+import 'package:schooldata_hub_client/features/pupilbase/bloc/pupilbase_bloc.dart';
 
 class AttendanceListScreen extends StatelessWidget {
   const AttendanceListScreen({super.key});
