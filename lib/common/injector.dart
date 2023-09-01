@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:schooldata_hub_client/common/dio_helper.dart';
 import 'package:schooldata_hub_client/features/attendance_list/api/schoolday_api.dart';
 import 'package:schooldata_hub_client/features/attendance_list/bloc/schoolday_bloc.dart';
 import 'package:schooldata_hub_client/features/auth/api/auth_api.dart';
@@ -8,11 +10,12 @@ import 'package:schooldata_hub_client/features/pupilbase/api/pupilbase_api.dart'
 import 'package:schooldata_hub_client/features/pupilbase/bloc/pupilbase_bloc.dart';
 
 Future<void> injectorSetup(GetIt getIt) async {
-  const FlutterSecureStorage storage = FlutterSecureStorage();
-
   void registerApis() {
     getIt.registerLazySingleton<AuthApi>(
-      () => AuthApi(),
+      () => AuthApi(
+        getIt<Dio>(),
+        getIt<FlutterSecureStorage>(),
+      ),
     );
     getIt.registerLazySingleton<SchooldayApi>(
       () => SchooldayApi(),
@@ -40,12 +43,22 @@ Future<void> injectorSetup(GetIt getIt) async {
     );
   }
 
-  void registerSecureStorage() {
-    getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
+  void registerHelpers() {
+    getIt.registerLazySingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+        ),
+      ),
+    );
+
+    getIt.registerLazySingleton<Dio>(
+      () => DioHelper.createDioInstance(getIt),
+    );
   }
 
   await getIt.reset();
-  registerSecureStorage();
+  registerHelpers();
   registerApis();
   registerBlocs();
   await getIt.allReady();
