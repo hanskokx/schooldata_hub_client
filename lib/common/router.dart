@@ -1,6 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:schooldata_hub_client/common/app_scaffold.dart';
+import 'package:schooldata_hub_client/common/authentication_service.dart';
+import 'package:schooldata_hub_client/features/auth/bloc/auth_bloc.dart';
+import 'package:schooldata_hub_client/features/auth/classes/session_model.dart';
 import 'package:schooldata_hub_client/features/auth/screens/login_screen.dart';
 import 'package:schooldata_hub_client/features/home/screens/home_screen.dart';
 import 'package:schooldata_hub_client/features/splash/screens/splash_screen.dart';
@@ -32,30 +38,30 @@ class AppRouter {
     initialLocation: "/splash",
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
-      // final Session? session = context.read<AuthBloc>().session;
-      // if (session == null) {
-      //   AuthenticationService.instance.setUnauthenticated();
-      // } else {
-      //   context.read<AuthBloc>().add(RefreshSession());
-      // }
+      final Session? session = context.read<AuthBloc>().session;
+      if (session == null) {
+        AuthenticationService.instance.setUnauthenticated();
+      } else {
+        context.read<AuthBloc>().add(RefreshSession());
+      }
 
-      // final AuthenticationStatus status = AuthenticationService.instance.status;
+      final AuthenticationStatus status = AuthenticationService.instance.status;
 
-      // final List<String> guardedRoutes = [
-      //   AppRouter.home,
-      // ];
+      final List<String> guardedRoutes = [
+        AppRouter.home,
+      ];
 
-      // if (status != AuthenticationStatus.authenticated &&
-      //     guardedRoutes.any(
-      //       (String path) => state.matchedLocation.contains(path),
-      //     )) {
-      //   log("Redirecting from ${state.matchedLocation} to login as a guard route");
+      if (status != AuthenticationStatus.authenticated &&
+          guardedRoutes.any(
+            (String path) => state.matchedLocation.contains(path),
+          )) {
+        log("Redirecting from ${state.matchedLocation} to login as a guard route");
 
-      //   return state.namedLocation(
-      //     AppRouter.login,
-      //     queryParameters: <String, String>{"from": state.matchedLocation},
-      //   );
-      // }
+        return state.namedLocation(
+          AppRouter.login,
+          queryParameters: <String, String>{"from": state.matchedLocation},
+        );
+      }
       return null;
     },
     routes: <RouteBase>[

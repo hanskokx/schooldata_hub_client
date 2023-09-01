@@ -12,6 +12,8 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthApi api;
   final FlutterSecureStorage storage;
+  Session? _session;
+
   AuthBloc(this.api, this.storage) : super(const AuthInitialState()) {
     on<StartAppEvent>((event, emit) async {
       emit(const AuthLoadingState());
@@ -29,6 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthErrorState(message: "Login session invalid"));
         return;
       }
+
+      _session = session;
 
       emit(
         AuthenticatedState(
@@ -48,6 +52,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         return;
       }
 
+      _session = result.value;
+
       emit(
         AuthenticatedState(
           username: event.username,
@@ -61,8 +67,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) async {
         await storage.delete(key: 'session');
         Debug.info('Session deleted!');
+        _session = null;
         emit(const AuthUnauthenticatedState());
       },
     );
   }
+  Session? get session => _session;
 }

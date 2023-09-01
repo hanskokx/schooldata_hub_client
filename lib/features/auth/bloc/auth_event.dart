@@ -5,9 +5,7 @@ abstract class AuthEvent {
   const AuthEvent();
 }
 
-class StartAppEvent extends AuthEvent {
-  const StartAppEvent();
-}
+class RefreshSession extends AuthEvent {}
 
 class SignInEvent extends AuthEvent {
   final String username;
@@ -21,4 +19,8 @@ class SignInEvent extends AuthEvent {
 
 class SignOutEvent extends AuthEvent {
   const SignOutEvent();
+}
+
+class StartAppEvent extends AuthEvent {
+  const StartAppEvent();
 }
